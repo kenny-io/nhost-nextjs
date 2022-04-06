@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { useQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { useAuthQuery } from "@nhost/react-apollo";
 import { gql } from "@apollo/client";
 import { useState } from "react";
 import Todos from "../components/Todos";
@@ -29,7 +30,7 @@ const Add_Todos = gql`
   }
 `;
 export default function Home() {
-  const { data, loading, error } = useQuery(Get_Todos);
+  const { data, loading, error, refetch } = useAuthQuery(Get_Todos);
   const [todoTitle, setTodoTitle] = useState("");
   const [insertTodo] = useMutation(Add_Todos);
   const isAuthenticated = useAuthenticated();
@@ -63,6 +64,8 @@ export default function Home() {
 
       setTodoTitle("");
       console.log("Todo inserted");
+      // * kind of ugly - the usual pattern is to update the Apollo cache
+      await refetch();
     } catch (error) {
       console.log(error);
     }
