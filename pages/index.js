@@ -50,6 +50,7 @@ export default function Home() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log(isAuthenticated);
     try {
       // insert todo item to the todo table
       await insertTodo({
